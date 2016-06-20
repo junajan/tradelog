@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="row">
+
+		<div class="order-add form-inline">
+			<form novalidate class="simple-form" ng-submit="addOrder(order)">
+				<div class="form-group">
+					<label for="ticker">Ticker:</label>
+					<input type="text" class="form-control" id="ticker" placeholder="Order ticker" ng-model="order.ticker">
+				</div>
+				<div class="form-group">
+					<label for="amount">&nbsp;Amount:</label>
+					<input type="text" class="form-control" id="amount" placeholder="Order amount" ng-model="order.amount">
+				</div>
+				<div class="form-group">
+					<label for="price">&nbsp;Price:</label>
+					<input type="text" class="form-control" id="price" placeholder="Order price per one item" ng-model="order.price">
+				</div>
+				<button type="submit" class="btn btn-default">Add</button>
+			</form>
+		</div>
+		<br />
+
+		<div ng-include='"./views/_orderList.html"'></div>
+	</div>
+</div>

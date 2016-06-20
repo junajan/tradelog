@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd /var/node/Tradelog
+
+echo "Loading Openings"
+npm run openings >> /var/log/Tradelog-openings.log
+
+echo "Script exited with $?"
