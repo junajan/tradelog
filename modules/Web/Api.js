@@ -49,7 +49,7 @@ var Api = function(app) {
 				var out = {};
 
 				if(err)
-					_.noop("There was an error when requesting actual prices from Yahoo API", err);
+					console.error("There was an error when requesting actual prices from Yahoo API", err);
 				else if(res)
 					res.map(function(d) {
 						out[d[0]] = {
