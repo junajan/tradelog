@@ -22,6 +22,7 @@ module.exports = function(app) {
 
     authRoutes.get('*', Web.getApp);
 
+    apiRoutes.get('/actual-prices', Api.getActualPrices);
     apiRoutes.get('/order', Api.getOrders);
     apiRoutes.post('/order', Api.postOrder);
 

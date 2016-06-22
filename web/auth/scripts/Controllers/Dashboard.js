@@ -1,18 +1,11 @@
 Tradelog.controller ( "Dashboard", [
     '$scope', 'Orders', '$timeout',
     function ($scope, Orders, $timeout) {
-    	$scope.equity = [];
+        var ACTUAL_PRICES_INTERVAL = 5000;
 
-        $scope.addOrder = function (order) {
-            console.log(order);
-            if(!order)
-                return alert("Wrong input!");
-
-            console.log(Orders);
-            Orders.save(order, function(err, res) {
-                console.log(err, res);
-            });
-        };
+    	$scope.orders = [];
+    	$scope.actualPrices = {};
+    	$scope.actualPricesPromise = null;
 
     	$scope.load = function() {
             Orders.query(function(res) {
@@ -20,9 +13,32 @@ Tradelog.controller ( "Dashboard", [
 	    	});
     	};
 
-    	$scope.load();
+        $scope.addOrder = function (order) {
+            if(!order)
+                return alert("Wrong input!");
+
+            Orders.save(order, function(err, res) {
+                $scope.load();
+            });
+        };
+
+
+        $scope.loadActualPrices = function() {
+
+            Orders.getActualPrices(function(res) {
+                $scope.actualPrices = res;
+                $timeout($scope.loadActualPrices, ACTUAL_PRICES_INTERVAL);
+            });
+        };
+
+
+        $scope.load();
+        $scope.loadActualPrices();
+
         $scope.$on('$destroy', function() {
             $scope.load = null;
+
+            $timeout.cancel($scope.actualPricesPromise);
         });
     }
 ]);

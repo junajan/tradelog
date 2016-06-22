@@ -9,6 +9,7 @@
 			<th>Close date</th>
 			<th>C. Price</th>
 			<th>Profit/Loss</th>
+			<th>Calc</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -22,21 +23,31 @@
 				<span ng-if="item.close_date">{{item.close_date | date}}</span>
 			</td>
 			<td>
-				<span ng-if="item.close_date">
+				<span ng-if="item.close_date && !item.calc">
 					{{item.close_price * item.amount | currency:'$'}} ({{ item.close_price | currency:'$'}})
 				</span>
-				<span class="shadow not-finished-order" ng-if="!item.close_date && openTickersPrices && openTickersPrices[item.ticker]">
-					{{ openTickersPrices[item.ticker] * item.amount | currency:'$' }}
-					({{ openTickersPrices[item.ticker] | currency:'$' }})
+				<span class="shadow not-finished-order" ng-if="!item.calc && !item.close_date && actualPrices && actualPrices[item.ticker]" title="{{actualPrices && actualPrices[item.ticker] ? 'Date: '+ actualPrices[item.ticker].date : ''}}">
+					{{ actualPrices[item.ticker].price * item.amount | currency:'$' }}
+					({{ actualPrices[item.ticker].price | currency:'$' }})
+				</span>
+				<span class="shadow not-finished-order" ng-if="item.calc">
+					{{item.calc * item.amount | currency:'$' }}
+					({{item.calc | currency:'$' }})
 				</span>
 			</td>
-			<td class="profit_loss" ng-class="{red: item.close_price <= item.open_price}">
-				<span ng-if="item.close_date">
+			<td class="profit_loss" ng-class="{red: !item.calc && item.close_price <= item.open_price}">
+				<span ng-if="!item.calc && item.close_date">
 					{{(item.close_price - item.open_price) * item.amount  | currency:'$' }}
 				</span>
-				<span class="shadow not-finished-order" ng-if="!item.close_date && openTickersPrices && openTickersPrices[item.ticker]">
-					{{(openTickersPrices[item.ticker] - item.open_price) * item.amount  | currency:'$' }}
+				<span class="shadow not-finished-order" ng-if="!item.calc && !item.close_date && actualPrices && actualPrices[item.ticker]" title="{{actualPrices && actualPrices[item.ticker] ? 'Date: '+ actualPrices[item.ticker].date : ''}}">
+					{{(actualPrices[item.ticker].price - item.open_price) * item.amount  | currency:'$' }}
 				</span>
+				<span class="shadow not-finished-order" ng-if="item.calc">
+					{{(item.calc - item.open_price) * item.amount  | currency:'$' }}
+				</span>
+			</td>
+			<td>
+				<input size="5" type="text" ng-model="item.calc">
 			</td>
 		</tr>
 	</tbody>

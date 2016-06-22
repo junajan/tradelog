@@ -1,14 +1,19 @@
 var _ = require("lodash");
+var moment = require("moment");
 
+var UNFINISHED_PRICES_INTERVAL = 10000;
 var Api = function(app) {
 	var self = this;
 	var config = app.config;
 	var DB = app.DB;
+	self.actualPrices = {};
+
+	var Yahoo = require(config.dirCore+"HistYahoo");
 
 	this.getOrders = function(req, res) {
 		var limit = parseInt(req.query.limit) || null;
 
-		DB.getData('*', "log", '1=1', 'DESC, buy_date DESC, sell_date DESC', limit, function(err, data) {
+		DB.getData('*', "log", '1=1', 'DESC, open_date DESC, close_date DESC', limit, function(err, data) {
 			res.json(data);
 		});
 	};
@@ -29,6 +34,37 @@ var Api = function(app) {
 				res.json({ok: true});
 		});
 	};
+
+
+	this.getActualPrices = function(req, res) {
+		res.json(self.actualPrices);
+	};
+
+	this.loadUfinishedPrices = function() {
+		DB.getData('ticker', 'log', 'close_date IS NULL', function(err, tickers) {
+			tickers = tickers.map(function(p) {
+				return p.ticker;
+			});
+			Yahoo.actual(tickers, function(err, res) {
+				var out = {};
+
+				if(err)
+					_.noop("There was an error when requesting actual prices from Yahoo API", err);
+				else if(res)
+					res.map(function(d) {
+						out[d[0]] = {
+							price: d[1],
+							date: moment().format("D.M.YYYY hh:mm:ss")
+						};
+					});
+
+				self.actualPrices = out;
+			});
+		});
+	};
+
+	self.loadUfinishedPrices();
+	setInterval(self.loadUfinishedPrices, UNFINISHED_PRICES_INTERVAL);
 	
 	return this;
 };
