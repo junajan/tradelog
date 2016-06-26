@@ -1,0 +1,24 @@
+<div class="row">
+	<div class="row">
+		<h2 class="margin-0">Add note</h2>
+
+		<div class="order-add form-inline">
+			<form novalidate ng-submit="addNote(note)">
+				<div>
+					<textarea class="text-note" id="text" placeholder="Text of the note" ng-model="note.note"></textarea>
+				</div>
+				<button type="submit" class="btn btn-default">Save</button>
+			</form>
+		</div>
+		<br />
+
+		<h2>Notes</h2>
+		<p ng-if="notes.length == 0">There are no notes in the database..</p>
+		<ul class="notes-list" ng-if="notes.length">
+			<li ng-repeat="item in notes">
+				<small>{{ item.date_add | date:"short" }} | {{ item.author }}</small>
+				<p ng-bind-html="item.note"></p>
+			</li>
+		</ul>
+	</div>
+</div>

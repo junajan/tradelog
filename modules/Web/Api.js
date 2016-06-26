@@ -1,5 +1,6 @@
 var _ = require("lodash");
 var moment = require("moment");
+var autolinker = require("autolinker");
 
 var UNFINISHED_PRICES_INTERVAL = 10000;
 var Api = function(app) {
@@ -17,7 +18,7 @@ var Api = function(app) {
 			res.json(data);
 		});
 	};
-	
+
 	this.postOrder = function (req, res) {
 		var body = _.pick(req.body, ["ticker", "amount", "price"]);
 		var data = {};
@@ -35,6 +36,39 @@ var Api = function(app) {
 		});
 	};
 
+	this.decorateNotes = function (notes) {
+		if(!notes)
+			return notes;
+
+		return notes.map(function (item) {
+			item.note = autolinker.link(item.note);
+			return item;
+		});
+	};
+
+	this.getNotes = function(req, res) {
+		var limit = parseInt(req.query.limit) || null;
+
+		DB.getData('*', "note", 'date_deleted IS NULL', null, 'date_add DESC', limit, function(err, data) {
+			res.json(self.decorateNotes(data));
+		});
+	};
+
+	this.postNote = function (req, res) {
+		var data = {
+			note: req.body.note,
+			author: req.session.authorized.username
+		};
+
+		DB.insert("note", data, function (err, dbRes) {
+			if(err) {
+				console.error("Order insert:", err);
+				return res.status(500).json({error: "DB issue"});
+			}
+			else
+				res.json({ok: true});
+		});
+	};
 
 	this.getActualPrices = function(req, res) {
 		res.json(self.actualPrices);

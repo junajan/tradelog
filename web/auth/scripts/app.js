@@ -1,6 +1,6 @@
 'use strict';
 
-var Tradelog = angular.module("tradelog", ['ngRoute', 'ngResource'])
+var Tradelog = angular.module("tradelog", ['ngRoute', 'ngResource', 'ngSanitize'])
     .config([
         '$httpProvider', '$locationProvider', '$routeProvider',
         function($httpProvider, $locationProvider, $routeProvider) {
@@ -20,6 +20,11 @@ var Tradelog = angular.module("tradelog", ['ngRoute', 'ngResource'])
                 templateUrl: viewFolder+"Dashboard.html",
                 controller: "Dashboard",
                 title: "Dashboard"
+            })
+            .when("/notes", {
+                templateUrl: viewFolder+"Notes.html",
+                controller: "Notes",
+                title: "Notes"
             })
             .otherwise({
                 templateUrl: viewFolder+"/Error404.html",

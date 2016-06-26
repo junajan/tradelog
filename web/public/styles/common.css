@@ -44,3 +44,31 @@ body {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.text-note {
+  width: 100%;
+  min-height: 80px;
+  display: block;
+  border-radius: 4px;
+  border-color: #bbbbbb;
+  margin-bottom: 4px;
+  padding: 4px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.margin-0 {
+  margin: 0px;
+}
+
+.notes-list {
+  padding-left: 0px;
+}
+
+.notes-list small {
+  color: #4b4B4B;
+}
+
+.notes-list p {
+  font-size: 15px;
+}

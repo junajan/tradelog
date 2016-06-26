@@ -20,11 +20,16 @@ module.exports = function(app) {
         authStatic(req, res, next);
     });
 
-    authRoutes.get('*', Web.getApp);
+    authRoutes.get('/login', Web.isNotAuthorized, Web.getLogin);
+    authRoutes.post('/login', Web.isNotAuthorized, Web.doLogin);
+    authRoutes.get('/logout', Web.isAuthorized, Web.doLogout);
+    authRoutes.get('*', Web.isAuthorized, Web.getApp);
 
-    apiRoutes.get('/actual-prices', Api.getActualPrices);
-    apiRoutes.get('/order', Api.getOrders);
-    apiRoutes.post('/order', Api.postOrder);
+    apiRoutes.get('/actual-prices', Web.isAuthorized, Api.getActualPrices);
+    apiRoutes.get('/order', Web.isAuthorized, Api.getOrders);
+    apiRoutes.post('/order', Web.isAuthorized, Api.postOrder);
+    apiRoutes.get('/note', Web.isAuthorized, Api.getNotes);
+    apiRoutes.post('/note', Web.isAuthorized, Api.postNote);
 
     app.use('/api', apiRoutes);
     app.use('/', authRoutes);
