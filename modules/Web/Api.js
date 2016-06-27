@@ -14,7 +14,7 @@ var Api = function(app) {
 	this.getOrders = function(req, res) {
 		var limit = parseInt(req.query.limit) || null;
 
-		DB.getData('*', "log", '1=1', null, 'open_date DESC, close_date DESC', limit, function(err, data) {
+		DB.getData('*', "log", '1=1', null, 'close_date DESC, open_date DESC', limit, function(err, data) {
 			res.json(data);
 		});
 	};
@@ -75,7 +75,7 @@ var Api = function(app) {
 	};
 
 	this.loadUfinishedPrices = function() {
-		DB.getData('ticker', 'log', 'close_date IS NULL', function(err, tickers) {
+_§¨		DB.getData('ticker', 'log', 'close_date IS NULL', function(err, tickers) {
 			tickers = tickers.map(function(p) {
 				return p.ticker;
 			});
