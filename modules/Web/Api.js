@@ -14,7 +14,7 @@ var Api = function(app) {
 	this.getOrders = function(req, res) {
 		var limit = parseInt(req.query.limit) || null;
 
-		DB.getData('*', "log", '1=1', null, 'close_date DESC, open_date DESC', limit, function(err, data) {
+		DB.getData('*', "log", '1=1', null, 'close_date IS NULL DESC, close_date DESC, open_date DESC', limit, function(err, data) {
 			res.json(data);
 		});
 	};
