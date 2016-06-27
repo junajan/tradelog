@@ -75,7 +75,7 @@ var Api = function(app) {
 	};
 
 	this.loadUfinishedPrices = function() {
-_§¨		DB.getData('ticker', 'log', 'close_date IS NULL', function(err, tickers) {
+		DB.getData('ticker', 'log', 'close_date IS NULL', function(err, tickers) {
 			tickers = tickers.map(function(p) {
 				return p.ticker;
 			});
