@@ -6,10 +6,21 @@ Tradelog.controller ( "Dashboard", [
     	$scope.orders = [];
     	$scope.actualPrices = {};
     	$scope.actualPricesPromise = null;
+        $scope.sum = 0;
+
+        $scope.countSumProfit = function(orders){
+            var sum = 0;
+            orders.forEach(function(item) {
+                if(item.close_date)
+                    sum += (item.close_price - item.open_price) * item.amount;
+            });
+            $scope.sum = sum;
+        };
 
     	$scope.load = function() {
             Orders.query(function(res) {
 				$scope.orders = res;
+                $scope.countSumProfit(res);
 	    	});
     	};
 
